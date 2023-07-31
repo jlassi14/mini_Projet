@@ -3,6 +3,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import HomeScreen from './Screens/HomeScreem';
+import DetailsScreen from './Screens/DetailsScreen';
+import FavouritesScreen from './Screens/FavouritesScreen';
 
 const Stack = createStackNavigator();
 
@@ -13,7 +15,9 @@ function App() {
     <NavigationContainer>
       <Stack.Navigator initialRouteName='Home' >
         <Stack.Screen name="Home" component={HomeScreen} />
-       
+        <Stack.Screen name="Details" component={DetailsScreen} />
+        <Stack.Screen name="Favourites" component={FavouritesScreen} />
+
       </Stack.Navigator>
     </NavigationContainer>
   );
