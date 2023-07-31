@@ -40,7 +40,7 @@ const Details = () => {
     }
   };
 
-  const removeFromFavorites = async () => {
+  /*const removeFromFavorites = async () => {
     if (isMovieFavorite()) {
       const updatedFavorites = favoriteMovies.filter((favMovie) => favMovie.id !== movie.id);
       setFavoriteMovies(updatedFavorites);
@@ -50,7 +50,7 @@ const Details = () => {
         console.error('Error removing from favorites:', error);
       }
     }
-  };
+  };*/
 
   return (
     <View style={styles.container}>
@@ -69,7 +69,7 @@ const Details = () => {
 
       <View style={styles.favoriteButtonContainer}>
         {isMovieFavorite() ? (
-          <Text style={styles.favoriteText} onPress={removeFromFavorites}>
+          <Text style={styles.favoriteText} >
             Remove from Favorites
           </Text>
         ) : (
@@ -79,26 +79,7 @@ const Details = () => {
         )}
       </View>
 
-      {favoriteMovies.length > 0 && (
-        <View>
-          <Text style={styles.favoritesHeader}>Your Favorite Movies:</Text>
-          <FlatList
-            data={favoriteMovies}
-            renderItem={({ item }) => (
-              <View style={styles.favoriteMovieItem}>
-                <Image
-                  source={{ uri: `https://image.tmdb.org/t/p/w500/${item.poster_path}` }}
-                  style={styles.favoritePoster}
-                />
-                <Text>{item.title}</Text>
-                <Text>Average Rating: {item.vote_average}</Text>
-              </View>
-            )}
-            keyExtractor={(item) => item.id.toString()}
-            contentContainerStyle={styles.favoritesList}
-          />
-        </View>
-      )}
+    
     </View>
   );
 };
