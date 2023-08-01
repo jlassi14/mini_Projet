@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, Image, StyleSheet } from 'react-native';
+import React, { useEffect } from 'react';
+import { View, Text, Image, StyleSheet } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import { useSelector, useDispatch } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Details = () => {
   const route = useRoute();
   const { movie } = route.params;
-  const [favoriteMovies, setFavoriteMovies] = useState([]);
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const favoriteMovies = useSelector(state => state.favoriteMovies);
 
   useEffect(() => {
     loadFavoriteMovies();
@@ -17,7 +19,7 @@ const Details = () => {
     try {
       const storedFavoriteMovies = await AsyncStorage.getItem('favoriteMovies');
       if (storedFavoriteMovies) {
-        setFavoriteMovies(JSON.parse(storedFavoriteMovies));
+        dispatch({ type: 'SET_FAVORITE_MOVIES', payload: JSON.parse(storedFavoriteMovies) });
       }
     } catch (error) {
       console.error('Error loading favorite movies:', error);
@@ -31,7 +33,7 @@ const Details = () => {
   const addToFavorites = async () => {
     if (!isMovieFavorite()) {
       const updatedFavorites = [...favoriteMovies, movie];
-      setFavoriteMovies(updatedFavorites);
+      dispatch({ type: 'SET_FAVORITE_MOVIES', payload: updatedFavorites });
       try {
         await AsyncStorage.setItem('favoriteMovies', JSON.stringify(updatedFavorites));
       } catch (error) {
@@ -40,36 +42,23 @@ const Details = () => {
     }
   };
 
-  /*const removeFromFavorites = async () => {
-    if (isMovieFavorite()) {
-      const updatedFavorites = favoriteMovies.filter((favMovie) => favMovie.id !== movie.id);
-      setFavoriteMovies(updatedFavorites);
-      try {
-        await AsyncStorage.setItem('favoriteMovies', JSON.stringify(updatedFavorites));
-      } catch (error) {
-        console.error('Error removing from favorites:', error);
-      }
-    }
-  };*/
-
   return (
     <View style={styles.container}>
-    <Image source={{ uri: `https://image.tmdb.org/t/p/w500/${movie.poster_path}` }} style={styles.poster} />
-    <Text style={styles.title}>{movie.title}</Text>
-    {movie.genres ? (
-      <Text style={styles.details}>Genres: {movie.genres.map((genre) => genre.name).join(', ')}</Text>
-    ) : (
-      <Text style={styles.details}>Genres: Not available</Text>
-    )}
-    <Text style={styles.details}>Release Date: {movie.release_date}</Text>
-    <Text style={styles.details}>Duration: {movie.runtime} minutes</Text>
-    <Text style={styles.details}>Average Rating: {movie.vote_average}</Text>
-    <Text style={styles.overview}>{movie.overview}</Text>
-
+      <Image source={{ uri: `https://image.tmdb.org/t/p/w500/${movie.poster_path}` }} style={styles.poster} />
+      <Text style={styles.title}>{movie.title}</Text>
+      {movie.genres ? (
+        <Text style={styles.details}>Genres: {movie.genres.map((genre) => genre.name).join(', ')}</Text>
+      ) : (
+        <Text style={styles.details}>Genres: Not available</Text>
+      )}
+      <Text style={styles.details}>Release Date: {movie.release_date}</Text>
+      <Text style={styles.details}>Duration: {movie.runtime} minutes</Text>
+      <Text style={styles.details}>Average Rating: {movie.vote_average}</Text>
+      <Text style={styles.overview}>{movie.overview}</Text>
 
       <View style={styles.favoriteButtonContainer}>
         {isMovieFavorite() ? (
-          <Text style={styles.favoriteText} >
+          <Text style={styles.favoriteText} onPress={addToFavorites}>
             Remove from Favorites
           </Text>
         ) : (
@@ -78,8 +67,6 @@ const Details = () => {
           </Text>
         )}
       </View>
-
-    
     </View>
   );
 };
@@ -112,22 +99,6 @@ const styles = StyleSheet.create({
   },
   favoriteText: {
     color: 'blue',
-  },
-  favoritesHeader: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  favoriteMovieItem: {
-    marginBottom: 20,
-    alignItems: 'center',
-  },
-  favoritePoster: {
-    width: 150,
-    height: 225,
-  },
-  favoritesList: {
-    padding: 10,
   },
 });
 

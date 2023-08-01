@@ -1,16 +1,14 @@
 import { View, TextInput, Button, StyleSheet, FlatList, Text, Image, Keyboard, TouchableOpacity } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import { useNavigation, useRoute , useFocusEffect } from '@react-navigation/native';
+import React, { useEffect } from 'react';
+import { useNavigation } from '@react-navigation/native';
+import { useSelector, useDispatch } from 'react-redux';
 
 const Home = () => {
-  const [username, setusername] = useState('');
-  const [password, setPassword] = useState('');
-  //const navigation = useNavigation();
   const API_KEY = 'a2f813058856fd9c644b17c154ceaf1f'; 
   const API_URL = `https://api.themoviedb.org/3/movie/top_rated?api_key=${API_KEY}`;
 
-  const [movies, setMovies] = useState([]);
-  const [filteredMovies, setFilteredMovies] = useState([]);
+  const dispatch = useDispatch();
+  const movies = useSelector(state => state.movies);
 
   useEffect(() => {
     fetchMovies();
@@ -20,17 +18,16 @@ const Home = () => {
     try {
       const response = await fetch(API_URL);
       const data = await response.json();
-      setMovies(data.results);
-      setFilteredMovies(data.results); // Initialize filteredMovies with all movies
+      dispatch({ type: 'SET_MOVIES', payload: data.results });
     } catch (error) {
       console.error('Error fetching movies:', error);
     }
   };
 
-  const navigation = useNavigation(); // Initialize useNavigation hook
+  const navigation = useNavigation();
+
   const handleMoviePress = (movie) => {
-    // Navigate to the Detail screen and pass the movie object as a parameter
-    navigation.navigate('Details',  { movie });
+    navigation.navigate('Details', { movie });
   };
 
   const handleSearch = (text) => {
@@ -38,7 +35,7 @@ const Home = () => {
     const filtered = movies.filter((movie) =>
       movie.title.toLowerCase().includes(text.toLowerCase())
     );
-    setFilteredMovies(filtered);
+    dispatch({ type: 'SET_FILTERED_MOVIES', payload: filtered }); // Dispatch action to update filtered movies
   };
 
   const renderMovieItem = ({ item }) => (
@@ -63,7 +60,7 @@ const Home = () => {
         onSubmitEditing={Keyboard.dismiss} // Close keyboard when pressing enter
       />
       <FlatList
-        data={filteredMovies}
+        data={movies} // Use the movies data from the Redux store directly
         renderItem={renderMovieItem}
         keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={{ padding: 20 }}
