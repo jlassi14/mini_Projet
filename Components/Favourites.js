@@ -6,13 +6,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Favorites = () => {
   const navigation = useNavigation();
-  const favoriteMovies = useSelector(state => state.favoriteMovies); // Use Redux state for favorites
-  const dispatch = useDispatch(); // Get the dispatch function from Redux
+  const favoriteMovies = useSelector(state => state.favoriteMovies); // Get the favorite movies from Redux state
+  const dispatch = useDispatch(); // Get the dispatch function from Redux to update state
 
   useEffect(() => {
     loadFavoriteMovies();
   }, []);
 
+  // Function to load favorite movies from AsyncStorage and update Redux state
   const loadFavoriteMovies = async () => {
     try {
       const storedFavoriteMovies = await AsyncStorage.getItem('favoriteMovies');
@@ -24,6 +25,7 @@ const Favorites = () => {
     }
   };
 
+  // Function to remove a movie from favorites
   const removeFromFavorites = async (movie) => {
     const updatedFavorites = favoriteMovies.filter((favMovie) => favMovie.id !== movie.id);
     try {
@@ -34,11 +36,12 @@ const Favorites = () => {
     }
   };
 
+  // Function to handle movie press and navigate to Details screen
   const handleMoviePress = (movie) => {
-    // Navigate to the Details screen and pass the movie object as a parameter
     navigation.navigate('Details', { movie });
   };
 
+  // Function to render each favorite movie item
   const renderFavoriteMovieItem = ({ item }) => (
     <TouchableOpacity onPress={() => handleMoviePress(item)}>
       <View style={styles.favoriteMovieItem}>
@@ -57,9 +60,9 @@ const Favorites = () => {
 
   return (
     <View style={styles.container}>
-      {/* ... (Existing code) */}
+      {/* FlatList to render favorite movie items */}
       <FlatList
-        data={favoriteMovies}
+        data={favoriteMovies} // Use the favoriteMovies data from Redux store directly
         renderItem={renderFavoriteMovieItem}
         keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={styles.favoritesList}

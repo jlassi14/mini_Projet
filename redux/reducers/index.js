@@ -9,7 +9,7 @@ const moviesReducer = (state = initialState.movies, action) => {
     switch (action.type) {
       case 'SET_MOVIES':
         return action.payload;
-      case 'SET_FILTERED_MOVIES': // Add this case to handle the action
+      case 'SET_FILTERED_MOVIES': 
         return action.payload;
       default:
         return state;
