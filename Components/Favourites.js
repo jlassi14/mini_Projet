@@ -3,6 +3,7 @@ import { View, Text, FlatList, Image, StyleSheet, TouchableOpacity } from 'react
 import { useNavigation } from '@react-navigation/native';
 import { useSelector, useDispatch } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const Favorites = () => {
   const navigation = useNavigation();
@@ -44,16 +45,23 @@ const Favorites = () => {
   // Function to render each favorite movie item
   const renderFavoriteMovieItem = ({ item }) => (
     <TouchableOpacity onPress={() => handleMoviePress(item)}>
-      <View style={styles.favoriteMovieItem}>
+      <View style={styles.movieContainer}>
+
         <Image
           source={{ uri: `https://image.tmdb.org/t/p/w500/${item.poster_path}` }}
-          style={styles.favoritePoster}
+          style={styles.movieImage}
+
         />
-        <Text>{item.title}</Text>
-        <Text>Average Rating: {item.vote_average}</Text>
-        <Text style={styles.removeButton} onPress={() => removeFromFavorites(item)}>
-          Remove from Favorites
-        </Text>
+
+        <TouchableOpacity onPress={() => navigation.navigate('Favourites')}>
+          <Icon name="minus-circle" style={styles.heartIcon} size={30} color="#FF0000" onPress={() => removeFromFavorites(item)} />
+        </TouchableOpacity>
+        <View style={styles.movieInfoContainer}>
+
+          <Text>{item.title}</Text>
+          <Text>Average Rating: {item.vote_average}</Text>
+        </View>
+
       </View>
     </TouchableOpacity>
   );
@@ -62,11 +70,16 @@ const Favorites = () => {
     <View style={styles.container}>
       {/* FlatList to render favorite movie items */}
       <FlatList
+        contentContainerStyle={{ padding: 30 }}
+        horizontal={false}
+        numColumns={2}
         data={favoriteMovies} // Use the favoriteMovies data from Redux store directly
         renderItem={renderFavoriteMovieItem}
         keyExtractor={(item) => item.id.toString()}
-        contentContainerStyle={styles.favoritesList}
+        columnWrapperStyle={styles.rowContainer}
       />
+
+
     </View>
   );
 };
@@ -74,8 +87,17 @@ const Favorites = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
+    justifyContent: 'center',
     padding: 16,
+
+  },
+  heartIcon: {
+    fontSize: 25,
+    fontWeight: 'bold',
+    marginTop: -145,
+    marginLeft: 115,
+
+
   },
   favoritesHeader: {
     fontSize: 16,
@@ -86,16 +108,44 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     alignItems: 'center',
   },
-  favoritePoster: {
-    width: 150,
-    height: 225,
+  heartIconContainer: {
+    flexDirection: 'row', // Stack icon and search bar vertically
+    justifyContent: 'flex-end', // Align the icon to the right
+    alignItems: 'center', // Center the icon vertically
+    marginBottom: 16, // Add some margin between icon and search bar
   },
-  favoritesList: {
-    padding: 10,
+  movieContainer: {
+    alignItems: 'center',
+    marginBottom: 30,
+  },
+  movieImage: {
+    width: 150,
+    height: 150,
+    borderRadius: 8,
+  },
+  movieInfoContainer: {
+    marginTop: 10,
+    alignItems: 'center',
+    flexDirection: 'column',
+    marginLeft: 10,
+  },
+  movieTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginVertical: 8,
+  },
+  movieRating: {
+    fontSize: 14,
+    color: '#888',
   },
   removeButton: {
     color: 'red',
     marginTop: 5,
+  },
+  rowContainer: {
+    justifyContent: 'space-between', // Add space between images
+    marginBottom: 20,
+    width: '100%', // Set the width of the row container to 100%
   },
 });
 

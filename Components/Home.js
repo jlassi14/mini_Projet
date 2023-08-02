@@ -1,17 +1,17 @@
-// Import required libraries
-import { View, TextInput, StyleSheet, FlatList, Text, Image, Keyboard,Dimensions, TouchableOpacity } from 'react-native';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { View, StyleSheet, FlatList, Text, Image, Dimensions, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/Ionicons';
-
+import Icon from 'react-native-vector-icons/FontAwesome';
 import { useSelector, useDispatch } from 'react-redux';
 import { Searchbar } from 'react-native-paper';
+
 const Home = () => {
-  const API_KEY = 'a2f813058856fd9c644b17c154ceaf1f'; 
+  const API_KEY = 'a2f813058856fd9c644b17c154ceaf1f';
   const API_URL = `https://api.themoviedb.org/3/movie/top_rated?api_key=${API_KEY}`;
 
   const dispatch = useDispatch(); // Get the dispatch function from Redux
-  const movies = useSelector(state => state.movies); // Use Redux state for movies
+  const movies = useSelector((state) => state.movies); // Use Redux state for movies
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     fetchMovies();
@@ -23,6 +23,7 @@ const Home = () => {
       const response = await fetch(API_URL);
       const data = await response.json();
       dispatch({ type: 'SET_MOVIES', payload: data.results });
+      console.log('datadatadata', data);
     } catch (error) {
       console.error('Error fetching movies:', error);
     }
@@ -37,62 +38,62 @@ const Home = () => {
 
   // Update the filtered movies in Redux based on the entered text
   const handleSearch = (text) => {
-    const filtered = movies.filter((movie) =>
-      movie.title.toLowerCase().includes(text.toLowerCase())
-    );
+    setSearchQuery(text);
+    const filtered = movies.filter((movie) => movie.title.toLowerCase().includes(text.toLowerCase()));
     dispatch({ type: 'SET_FILTERED_MOVIES', payload: filtered }); // Dispatch action to update filtered movies in Redux
+  };
+
+  // Function to clear the search and display all movies
+  const clearSearch = () => {
+    setSearchQuery('');
+    dispatch({ type: 'SET_FILTERED_MOVIES', payload: movies }); // Set the filtered movies to the original movies list
   };
 
   // Render individual movie items in the FlatList
   const renderMovieItem = ({ item }) => (
     <TouchableOpacity onPress={() => handleMoviePress(item)}>
-    <View style={styles.movieContainer}>
-      <Image
-        source={{ uri: `https://image.tmdb.org/t/p/w500/${item.poster_path}` }}
-        style={styles.movieImage}
-      />
-      <View style={styles.movieInfoContainer}>
-        <Text style={styles.movieTitle}>{item.title}</Text>
-        <Text style={styles.movieRating}>Average Rating: {item.vote_average}</Text>
+      <View style={styles.movieContainer}>
+        <Image source={{ uri: `https://image.tmdb.org/t/p/w500/${item.poster_path}` }} style={styles.movieImage} />
+        <View style={styles.movieInfoContainer}>
+          <Text style={styles.movieTitle}>{item.title}</Text>
+          <Text style={styles.movieRating}>Average Rating: {item.vote_average}</Text>
+        </View>
       </View>
-    </View>
-  </TouchableOpacity>
+    </TouchableOpacity>
   );
 
   return (
-   
     <View style={styles.container}>
       {/* Heart icon */}
       <View style={styles.heartIconContainer}>
-        <TouchableOpacity  onPress={() =>  navigation.navigate('Favourites')}>
-          <Icon name="heart" size={24} color="#FF1493" />
+        <TouchableOpacity onPress={() => navigation.navigate('Favourites')}>
+          <Icon name="heart" size={24} color="#FF0000" />
         </TouchableOpacity>
       </View>
 
-      {/* Search input */}
-      <TextInput
-        style={styles.input}
+      {/* Searchbar */}
+      <Searchbar
+        style={styles.searchBar}
         placeholder="Search Movie"
         placeholderTextColor="#888"
         onChangeText={handleSearch}
-        onSubmitEditing={Keyboard.dismiss} // Close keyboard when pressing enter
+        value={searchQuery}
+        onIconPress={clearSearch} // Clear the search when the search icon is pressed
       />
+
       {/* Movie list */}
       <FlatList
-      contentContainerStyle={{padding:30}}
-      horizontal={false}
-      numColumns={2}
+        contentContainerStyle={{ padding: 30 }}
+        horizontal={false}
+        numColumns={2}
         data={movies} // Use the movies data from the Redux store directly
         renderItem={renderMovieItem}
         keyExtractor={(item) => item.id.toString()}
-       // contentContainerStyle={{ padding: 20 }}
-       columnWrapperStyle={styles.rowContainer}
-     
+        columnWrapperStyle={styles.rowContainer}
       />
     </View>
   );
 };
-
 
 const styles = StyleSheet.create({
   container: {
@@ -100,13 +101,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 16,
   },
-  input: {
+  searchBar: {
     height: 48,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 24,
-    paddingLeft: 16,
-    fontSize: 16,
     backgroundColor: '#fff',
     marginBottom: 12,
   },
@@ -129,7 +125,8 @@ const styles = StyleSheet.create({
     marginTop: 10,
     alignItems: 'center',
     flexDirection: 'column',
-    marginLeft:10,
+    marginLeft: 10,
+    width: 150
   },
   movieTitle: {
     fontSize: 16,

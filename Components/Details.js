@@ -3,13 +3,14 @@ import { View, Text, Image, StyleSheet , TouchableOpacity, ImageBackground, Scro
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useSelector, useDispatch } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Icon from 'react-native-vector-icons/Ionicons';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 
 const Details = () => {
   // Get the movie object from the route parameters
   const route = useRoute();
   const { movie } = route.params;
+  //console.error('moviiiie', movie);
 
   // Initialize navigation and Redux hooks
   const navigation = useNavigation();
@@ -55,61 +56,73 @@ const Details = () => {
 
 
   return (
-    
     <View style={styles.container}>
-     
       {/* Image background (cover image) */}
       <ImageBackground
         source={{ uri: `https://image.tmdb.org/t/p/w500/${movie.poster_path}` }}
         style={styles.posterBackground}
-        blurRadius={3}
+        blurRadius={2}
       >
-        {/* Display the movie title with a star icon if it's in the favorite list */}
+   <View style={styles.imageOverlay} >
+
         <View style={styles.titleContainer}>
-          {isMovieFavorite() && <Icon name="star" size={20} color="red" />}
           <View>
             <Text style={styles.title}>{movie.title}</Text>
-            <Text style={styles.details}>Duration: {movie.runtime} minutes</Text>
-            <Text style={styles.details}>Release Date: {movie.release_date}</Text>
+            <View style={styles.detailcontainer}>
+              <Text style={styles.details}>Duration: {movie.runtime} minutes</Text>
+              <Text style={styles.movieRating}>Average Rating: {movie.vote_average}</Text>
+            </View>
+            <Text style={styles.Date}>Release Date: {movie.release_date}</Text>
             {movie.genres ? (
-              <Text style={styles.details}>Genres: {movie.genres.map((genre) => genre.name).join(', ')}</Text>
+              <Text style={styles.Genres}>Genres: {movie.genres.map(genre => genre.name).join(', ')}</Text>
             ) : (
-              
-
-              <View  style={styles.favoriteButtonContainer}>
-              <Text style={styles.details}>Genres: Not available</Text>
+              <View style={styles.favoriteButtonContainer}>
+                <Text style={styles.Genres}>Genres: Not available</Text>
               </View>
             )}
           </View>
         </View>
-  
+
         {/* Display "Add to Favorites" or "Remove from Favorites" text based on whether the movie is in the favorite list */}
         <TouchableOpacity style={styles.heartIconContainer} onPress={addToFavorites}>
-        <Icon name={isMovieFavorite() ? 'heart' : 'heart-outline'} size={30} color="#FF0000" />
-      </TouchableOpacity>
-      </ImageBackground>
-  
-      {/* Display movie overview */}
-     
+          <Icon name={isMovieFavorite() ? 'star' : 'heart'} size={30} color="#FF0000" />
+        </TouchableOpacity>
 
+        {/* Add the back button in the top-right corner */}
+        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+          <Icon name="arrow-circle-left" size={30} color="white" />
+        </TouchableOpacity>
+        </View>
+      </ImageBackground>
+
+      {/* Display movie overview */}
       <View style={styles.overviewContainer}>
         <Text style={styles.overviewTitle}>Overview</Text>
         <Text style={styles.overview}>{movie.overview}</Text>
       </View>
     </View>
   );
-  
 };
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
     padding: 16,
   },
+  imageOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    height: '75%',
+    backgroundColor: 'rgba(0, 0, 0, 0.3)', // Adjust the alpha value to control transparency
+  },
   posterBackground: {
     width: '100%',
     height: '75%', // Set the background height to 75% of the screen
-    alignItems: 'center',
+    //alignItems: 'center',
     borderBottomLeftRadius: 20, 
     borderBottomRightRadius: 20, 
    
@@ -117,44 +130,91 @@ const styles = StyleSheet.create({
   titleContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 140,
-    justifyContent: 'center', // Center the text horizontally
+    marginTop: 190,
+    justifyContent: 'flex-start', // Align the items to the left
   },
+  
   title: {
     marginBottom:10,
-    fontSize: 29,
+    fontSize: 25,
     fontWeight: 'bold',
-    color: 'white', // Add color to the movie title
+    color: 'white', 
+    marginLeft: 10
+    // Add color to the movie title
    // marginLeft: 10,
   },
-  details: {
-    fontSize: 20,
-    marginBottom: 5,
-    color: 'white', // Add color to the movie details text
-   // fontWeight: 'bold',
+  backButton: {
+    position: 'absolute',
+    top: 20,
+    left: 20,
+    color: 'black',
+    borderRadius: 20,
+    padding: 8,
   },
+  Date: {
+    fontSize: 15,
+    marginBottom: 5,
+    color: 'white',
+    marginLeft: 15
+  },
+  
+  Genres: {
+    fontSize: 15,
+    marginBottom: 5,
+    color: 'white',
+    marginLeft: 10
+  },
+  details: {
+    fontSize: 15,
+    marginBottom: 5,
+    color: 'white',
+    marginLeft: 15
+  },
+  
+  movieRating: {
+    fontSize: 15,
+    marginBottom: 5,
+    color: 'white',
+    marginLeft: 100,
+  },
+  
+  detailcontainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderColor: 'black',    // Add border color (you can choose your desired color)
+
+  },
+  
+  
   detailsValue: {
     fontWeight: 'bold',
     color: 'white', // Add color to the movie details value (e.g., duration, release date, genres)
   },
   overviewContainer: {
-    marginTop: -90,
+    marginTop: -110,
     padding: 16,
     backgroundColor: 'rgba(0, 0, 0, 0.1)', // Semi-transparent background
     borderRadius: 8,
     width: '100%',
+
+    borderWidth: 2,
+  borderColor: 'black', 
   },
+
   overviewTitle: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 10,
     textAlign: 'left',
     color: 'black',
+    
   },
   overview: {
     fontSize: 16,
     textAlign: 'center',
     color: 'black',
+    
   },
 
   favoriteButtonContainer: {
