@@ -15,7 +15,6 @@ const moviesReducer = (state = initialState.movies, action) => {
         return state;
     }
   };
-  
 const favoriteMoviesReducer = (state = initialState.favoriteMovies, action) => {
   switch (action.type) {
     case 'SET_FAVORITE_MOVIES':

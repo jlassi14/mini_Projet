@@ -12,9 +12,11 @@ const Home = () => {
   const dispatch = useDispatch(); // Get the dispatch function from Redux
   const movies = useSelector((state) => state.movies); // Use Redux state for movies
   const [searchQuery, setSearchQuery] = useState('');
+  const [filteredMovies, setFilteredMovies] = useState([]);
 
   useEffect(() => {
     fetchMovies();
+   
   }, []);
 
   // Fetch movies from the API and dispatch action to update movies in Redux
@@ -37,12 +39,20 @@ const Home = () => {
   };
 
   // Update the filtered movies in Redux based on the entered text
-  const handleSearch = (text) => {
+  const handleSearch = async (text) => {
     setSearchQuery(text);
-    const filtered = movies.filter((movie) => movie.title.toLowerCase().includes(text.toLowerCase()));
-    dispatch({ type: 'SET_FILTERED_MOVIES', payload: filtered }); // Dispatch action to update filtered movies in Redux
+    if (text.length === 0) {
+      // If search query is empty, display all movies
+      setFilteredMovies([]);
+    } else {
+      // Filter the top-rated movies based on the entered text
+      const filtered = movies.filter((movie) =>
+        movie.title.toLowerCase().includes(text.toLowerCase())
+      );
+      // Update the filtered movies in local state
+      setFilteredMovies(filtered);
+    }
   };
-
   // Function to clear the search and display all movies
   const clearSearch = () => {
     setSearchQuery('');
@@ -86,7 +96,7 @@ const Home = () => {
         contentContainerStyle={{ padding: 30 }}
         horizontal={false}
         numColumns={2}
-        data={movies} // Use the movies data from the Redux store directly
+        data={searchQuery.length === 0 ? movies : filteredMovies} // Use the movies data from the Redux store directly
         renderItem={renderMovieItem}
         keyExtractor={(item) => item.id.toString()}
         columnWrapperStyle={styles.rowContainer}
