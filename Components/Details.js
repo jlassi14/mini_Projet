@@ -135,14 +135,20 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 8,
     alignSelf: 'center',
-    elevation: 5, // For Android shadows
+    elevation: 5, 
   },
   popupText: {
     color: 'black',
     fontSize: 16,
   },
 
-  
+   posterBackground: {
+    width: '100%',
+    height: '75%', 
+    borderBottomLeftRadius: 20, 
+    borderBottomRightRadius: 20, 
+   
+  },
   imageOverlay: {
     position: 'absolute',
     top: 0,
@@ -150,21 +156,21 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     height: '75%',
-    backgroundColor: 'rgba(0, 0, 0, 0.3)', // Adjust the alpha value to control transparency
-  },
-  posterBackground: {
-    width: '100%',
-    height: '75%', // Set the background height to 75% of the screen
-    //alignItems: 'center',
-    borderBottomLeftRadius: 20, 
-    borderBottomRightRadius: 20, 
-   
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
   },
   titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 190,
-    justifyContent: 'flex-start', // Align the items to the left
+    flexDirection: 'column', 
+    justifyContent: 'flex-start',
+    marginTop: '75%',
+  },
+  movieRating: {
+    fontSize: 15,
+    marginRight: 10,
+    color: 'white',
+    position: 'absolute', 
+    top: 0, 
+    right: 0, 
+    fontWeight: 'bold',
   },
   movieTitle: {
     fontSize: 16,
@@ -185,13 +191,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'white', 
     marginLeft: 10
-    // Add color to the movie title
-   // marginLeft: 10,
+    
   },
   backButton: {
     position: 'absolute',
-    top: 20,
-    left: 20,
+    top: 0,
+    
     color: 'black',
     borderRadius: 20,
     padding: 8,
@@ -216,30 +221,24 @@ const styles = StyleSheet.create({
     marginLeft: 15
   },
   
-  movieRating: {
-    fontSize: 15,
-    marginBottom: 5,
-    color: 'white',
-    marginLeft: 50,
-  },
-  
+ 
   detailcontainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    borderColor: 'black',    // Add border color (you can choose your desired color)
+    borderColor: 'black',    
 
   },
   
   
   detailsValue: {
     fontWeight: 'bold',
-    color: 'white', // Add color to the movie details value (e.g., duration, release date, genres)
+    color: 'white', 
   },
   overviewContainer: {
     marginTop: -110,
     padding: 16,
-    backgroundColor: 'rgba(0, 0, 0, 0.1)', // Semi-transparent background
+    backgroundColor: 'rgba(0, 0, 0, 0.1)', 
     borderRadius: 8,
     width: '100%',
 
@@ -257,13 +256,13 @@ const styles = StyleSheet.create({
   },
   overview: {
     fontSize: 16,
-    textAlign: 'center',
+    textAlign: 'left',
     color: 'black',
     
   },
 
   favoriteButtonContainer: {
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background for the button
+   // backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background for the button
     paddingVertical: 8,
     paddingHorizontal: 16,
     borderRadius: 8,
@@ -278,8 +277,8 @@ const styles = StyleSheet.create({
   },
   heartIconContainer: {
     position: 'absolute',
-    top: 20,
-    right: 20,
+    top: 0,
+    right: 0,
    // backgroundColor: 'rgba(255, 0, 0, 0.8)',
     borderRadius: 20,
     padding: 8,

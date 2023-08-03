@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    paddingLeft: 6,
+   // paddingRight: 20,
 
   },
   heartIcon: {
@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
   },
 
   movieTitle: {
-    fontWeight: 'bold', // Make the movie title bold
+    fontWeight: 'bold', 
   },
   favoritesHeader: {
     fontSize: 16,
@@ -147,8 +147,9 @@ const styles = StyleSheet.create({
   },
 
   movieContainer: {
-    alignItems: 'center',
-    marginBottom: 30,
+    //alignItems: 'left',
+    marginBottom: 20,
+
   },
   movieImage: {
     width: 150,
@@ -156,8 +157,8 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   movieInfoContainer: {
-    marginTop: 120,
-    alignItems: 'center',
+    marginTop: 110,
+    alignItems: 'left',
     flexDirection: 'column',
     marginLeft: 10,
     width: 150 ,
@@ -171,18 +172,22 @@ const styles = StyleSheet.create({
     
     fontSize: 16,
     fontWeight: 'bold',
-    marginVertical: 8,
-    color: 'black',  },  
+    marginVertical: 5,
+    color: 'black',  
+    marginBottom : -2,
+  },  
   average: {
     
     fontSize: 14,
-    color: '#888',  },
+    color: 'black',  
+  //marginTop: 50,
+},
 
 
   movieTitle: {
     fontSize: 16,
     fontWeight: 'bold',
-    marginVertical: 8,
+    marginVertical: 2,
     color: 'black',
 
     
@@ -196,9 +201,9 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   rowContainer: {
-    justifyContent: 'space-between', // Add space between images
-    marginBottom: 20,
-    width: '100%', // Set the width of the row container to 100%
+    justifyContent: 'space-between', 
+    marginBottom: 0,
+    width: '100%',
   },
 
   modal: {
@@ -227,7 +232,6 @@ const styles = StyleSheet.create({
   movieTitle: {
     fontWeight: 'bold', 
     color: 'gray',
-    // Make the movie title bold
   },
   modalActions: {
     flexDirection: 'row',

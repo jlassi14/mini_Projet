@@ -9,8 +9,8 @@ const Home = () => {
   const API_KEY = 'a2f813058856fd9c644b17c154ceaf1f';
   const API_URL = `https://api.themoviedb.org/3/movie/top_rated?api_key=${API_KEY}`;
 
-  const dispatch = useDispatch(); // Get the dispatch function from Redux
-  const movies = useSelector((state) => state.movies); // Use Redux state for movies
+  const dispatch = useDispatch(); 
+  const movies = useSelector((state) => state.movies); 
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredMovies, setFilteredMovies] = useState([]);
 
@@ -56,7 +56,7 @@ const Home = () => {
   // Function to clear the search and display all movies
   const clearSearch = () => {
     setSearchQuery('');
-    dispatch({ type: 'SET_FILTERED_MOVIES', payload: movies }); // Set the filtered movies to the original movies list
+    dispatch({ type: 'SET_FILTERED_MOVIES', payload: movies }); 
   };
 
   // Render individual movie items in the FlatList
@@ -109,49 +109,48 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    padding: 6,
+        padding: 2,
   },
   searchBar: {
     height: 48,
     backgroundColor: '#fff',
-    marginBottom: 12,
   },
   heartIconContainer: {
-    flexDirection: 'row', // Stack icon and search bar vertically
-    justifyContent: 'flex-end', // Align the icon to the right
-    alignItems: 'center', // Center the icon vertically
-    marginBottom: 16, // Add some margin between icon and search bar
+    flexDirection: 'row', 
+    justifyContent: 'flex-end', 
+    alignItems: 'center', 
+    marginBottom: 16, 
+    margin: 10,
+
   },
   movieContainer: {
-
-    marginBottom: 30,
+    margin: 10,
   },
   movieImage: {
     width: 150,
     height: 150,
     borderRadius: 8,
+  
   },
   movieInfoContainer: {
-    marginTop: 10,
-    alignItems: 'center',
-    flexDirection: 'column',
-    marginLeft: 10,
+    
     width: 150
   },
   movieTitle: {
     fontSize: 16,
     fontWeight: 'bold',
-    marginVertical: 8,
+    marginVertical: 2,
     color: 'black',
   },
   movieRating: {
     fontSize: 14,
-    color: '#888',
+    color: 'black',
   },
   rowContainer: {
-    justifyContent: 'space-between', // Add space between images
-    marginBottom: 20,
-    width: '100%', // Set the width of the row container to 100%
+    justifyContent: 'space-between',  
+    marginBottom: 0,
+    width: '100%',
+    justifyContent: 'center',
   },
 });
 
