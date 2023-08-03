@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    padding: 16,
+    padding: 6,
   },
   searchBar: {
     height: 48,
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
     marginBottom: 16, // Add some margin between icon and search bar
   },
   movieContainer: {
-    alignItems: 'center',
+
     marginBottom: 30,
   },
   movieImage: {
@@ -142,6 +142,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     marginVertical: 8,
+    color: 'black',
   },
   movieRating: {
     fontSize: 14,

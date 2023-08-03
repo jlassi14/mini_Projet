@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useEffect , useState} from 'react';
 import { View, Text, Image, StyleSheet , TouchableOpacity, ImageBackground, ScrollView} from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useSelector, useDispatch } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { Portal, Modal, Button , Snackbar  } from 'react-native-paper'; 
 
 
 const Details = () => {
@@ -11,6 +12,8 @@ const Details = () => {
   const route = useRoute();
   const { movie } = route.params;
   //console.error('moviiiie', movie);
+  const [showPopup, setShowPopup] = useState(false);
+  const [showConfirmation, setShowConfirmation] = useState(false);
 
   // Initialize navigation and Redux hooks
   const navigation = useNavigation();
@@ -38,7 +41,9 @@ const Details = () => {
   const isMovieFavorite = () => {
     return favoriteMovies.some((favMovie) => favMovie.id === movie.id);
   };
-
+  const closeConfirmation = () => {
+    setShowPopup(false); 
+  };
   // Function to add the movie to the favorite list
   const addToFavorites = async () => {
     if (!isMovieFavorite()) {
@@ -46,12 +51,12 @@ const Details = () => {
       dispatch({ type: 'SET_FAVORITE_MOVIES', payload: updatedFavorites });
       try {
         await AsyncStorage.setItem('favoriteMovies', JSON.stringify(updatedFavorites));
+        setShowPopup(true); 
       } catch (error) {
         console.error('Error adding to favorites:', error);
       }
     }
   };
-
 
 
 
@@ -100,6 +105,15 @@ const Details = () => {
         <Text style={styles.overviewTitle}>Overview</Text>
         <Text style={styles.overview}>{movie.overview}</Text>
       </View>
+
+      <Portal>
+        <Modal visible={showPopup} onDismiss={() => setShowPopup(false)} contentContainerStyle={styles.popupContainer}>
+          <Text style={styles.popupText}>Le film "<Text style={styles.movieTitle}>{movie?.title}</Text>" a été ajouté aux favoris !</Text>
+          <TouchableOpacity  style={styles.actionText} onPress={closeConfirmation}>
+              <Text style={styles.OKText}>OK</Text>
+            </TouchableOpacity>
+        </Modal>
+      </Portal>
     </View>
   );
 };
@@ -110,6 +124,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 16,
   },
+  actionText: {
+   // fontSize: 16,
+   marginTop: 25,
+   paddingLeft: '70%',
+    //paddingBottom: 35,
+  },
+  popupContainer: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 8,
+    alignSelf: 'center',
+    elevation: 5, // For Android shadows
+  },
+  popupText: {
+    color: 'black',
+    fontSize: 16,
+  },
+
+  
   imageOverlay: {
     position: 'absolute',
     top: 0,
@@ -133,7 +166,19 @@ const styles = StyleSheet.create({
     marginTop: 190,
     justifyContent: 'flex-start', // Align the items to the left
   },
-  
+  movieTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginVertical: 8,
+    color: 'black',
+  },
+  OKText: {
+    color: 'black',
+    fontSize: 16,
+    marginHorizontal: 10,
+    paddingBottom: 5,
+     marginTop: 5,
+  },
   title: {
     marginBottom:10,
     fontSize: 25,
@@ -175,7 +220,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     marginBottom: 5,
     color: 'white',
-    marginLeft: 100,
+    marginLeft: 50,
   },
   
   detailcontainer: {
